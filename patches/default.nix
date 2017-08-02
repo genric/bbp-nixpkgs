@@ -34,6 +34,9 @@ let
 
         };
 
+        stream = callPackage ./stream {
+        };
+
         ##open scene graph, for viz software
         openscenegraph = callPackage ./openscenegraph {
 
