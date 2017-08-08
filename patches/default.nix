@@ -35,6 +35,7 @@ let
         };
 
         stream = callPackage ./stream {
+          stdenv = stdenvICC;
         };
 
         ##open scene graph, for viz software
