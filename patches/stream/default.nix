@@ -27,11 +27,20 @@ stdenv.mkDerivation rec {
     '';
   };
 
+  # Intel KNL: -xMIC-AVX512
+  # IBM Power 9: -qarch=pwr9 -qtune=pwr9 -qhot -O3 -q64 \
+  #              -qsmp=omp -qsimd=auto -qprefetch=aggressive \
+  #              -qaltive=be automat \
+  #              -DN=134217728 -DOFFSET=0 -DNTIMES=10
+
   postPatch = ''
     sed -e "/^CC =/d" -i Makefile
-    sed -e "s/^CFLAGS =.*/CFLAGS = -mcmodel medium -shared-intel -O3 -xMIC-AVX512 -DN=134217728 -DOFFSET=0 -DNTIMES=10 -qopenmp -qopt-streaming-stores always/" -i Makefile
-    sed -e "s/^FFLAGS =.*/FFLAGS = -O3/" -i Makefile
+    sed -e "s/^CFLAGS =.*/CFLAGS = -mcmodel medium -shared-intel -O3 -DN=134217728 -DOFFSET=0 -DNTIMES=10 -qopenmp -qopt-streaming-stores always/" -i Makefile
   '';
 
   buildFlags = "stream_c.exe";
+
+  installPhase = ''
+    install -D ./stream_c.exe $out/bin/stream_c
+  '';
 }
